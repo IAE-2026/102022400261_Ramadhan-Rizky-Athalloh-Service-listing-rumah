@@ -1,0 +1,116 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Listing Property API",
+        "description": "API untuk Service Listing Rumah",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/api/v1/listings": {
+            "get": {
+                "tags": [
+                    "Listings"
+                ],
+                "summary": "Get all listings",
+                "operationId": "3bd1341c625da8148f3a01ce87e531f6",
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                },
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Listings"
+                ],
+                "summary": "Create new listing",
+                "operationId": "93b8a944b9924defa28b447e2e6878c3",
+                "requestBody": {
+                    "required": true
+                },
+                "responses": {
+                    "201": {
+                        "description": "Created"
+                    }
+                },
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/listings/{id}": {
+            "get": {
+                "tags": [
+                    "Listings"
+                ],
+                "summary": "Get detail listing",
+                "operationId": "36e7832d38430dff29914595214d5463",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                },
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/listings/{id}/availability": {
+            "get": {
+                "tags": [
+                    "Listings"
+                ],
+                "summary": "Check listing availability",
+                "operationId": "20213f2b5bb105fab5f91f6582d7e96f",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                },
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "ApiKeyAuth": {
+                "type": "apiKey",
+                "name": "X-IAE-KEY",
+                "in": "header"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Listings",
+            "description": "Listings"
+        }
+    ]
+}
