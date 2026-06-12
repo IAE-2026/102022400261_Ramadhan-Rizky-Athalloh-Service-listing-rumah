@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('location');
             $table->integer('price');
             $table->enum('status', ['available', 'unavailable']);
+            $table->string('receipt_number')->nullable();
             $table->timestamps();
         });
     }

@@ -150,3 +150,28 @@ Setiap repositori harus ada:
 | GET | `/api/v1/listings/{id}`              | Get detail  listing 
 | POST | `/api/v1/listings`                  | Create new listing 
 | GET | `/api/v1/listings/{id}/availability` | Check listing  availability 
+
+
+# Tugas 3 log prompting 
+
+### Prompt
+
+
+Saya sedang mengerjakan Tugas 3 Integrasi Aplikasi Enterprise (IAE). Saya ingin implementasi yang tetap mengikuti kontrak endpoint dan proses bisnis yang sudah disepakati.Buatkan langkah kerja, code, dan percobaan API yang harus saya lakukan.
+
+Respon AI:
+
+Menyiapkan database.
+Menambahkan kolom receipt_number.
+Membuat SoapAuditService.
+Membuat RabbitMQPublisher.
+Mengubah ListingController.
+Melakukan pengujian menggunakan Postman.
+
+prompt 2 : Bagaimana cara mengintegrasikan SoapAuditService ke ListingController?
+Respon : 
+Method store() dimodifikasi agar:
+-Menyimpan listing.
+-Mengirim data ke SoapAuditService.
+-Menerima Receipt Number.
+-Menyimpan Receipt Number ke database.

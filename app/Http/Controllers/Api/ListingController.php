@@ -5,9 +5,14 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use OpenApi\Attributes as OA;
+use App\Services\SoapAuditService;
+use App\Services\RabbitMQPublisher;
+use App\Models\Listing;
 
 class ListingController extends Controller
 {
+
+
 
     #[OA\Get(
         path: "/api/v1/listings",
@@ -101,14 +106,51 @@ class ListingController extends Controller
         description: "Created"
     )]
 
-    public function store(Request $request)
-    {
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Property created successfully',
-            'data' => $request->all()
-        ], 201);
-    }
+    public function store(
+    Request $request,
+    SoapAuditService $soapService,
+    RabbitMQPublisher $rabbitService
+)
+{
+    $validated = $request->validate([
+        'title' => 'required|string|max:255',
+        'description' => 'nullable|string',
+        'location' => 'required|string|max:255',
+        'price' => 'required|numeric'
+    ]);
+
+    $listing = Listing::create([
+        'title' => $validated['title'],
+        'description' => $validated['description'] ?? null,
+        'location' => $validated['location'],
+        'price' => $validated['price'],
+        'status' => 'available'
+    ]);
+
+    $audit = $soapService->sendAudit([
+        'listing_id' => $listing->id,
+        'title' => $listing->title,
+        'price' => $listing->price
+    ]);
+
+    $listing->receipt_number = 
+        $audit['receipt_number'];
+    $listing->save();
+
+    $rabbitService->publish([
+        'event' => 'listing.created',
+        'listing_id' => $listing->id,
+        'title' => $listing->title,
+        'price' => $listing->price
+    ]);
+
+    return response()->json([
+    'status' => 'success',
+    'message' => 'Property created successfully',
+    'receipt_number' => $listing->receipt_number,
+    'data' => $listing
+], 201);
+}
 
 
     #[OA\Get(
@@ -140,8 +182,31 @@ class ListingController extends Controller
             ]
         ]);
     }
+       #[OA\Get(
+        path: "/api/v1/contracts",
+        summary: "Get contracts",
+        security: [["ApiKeyAuth" => []]],
+        tags: ["Contracts"]
+    )]
 
+    #[OA\Response(
+        response: 200,
+        description: "Success"
+    )]
 
-    
-
+    public function contracts()
+    {
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Contracts retrieved successfully',
+            'data' => [
+                [
+                    'contract_id' => 1,
+                    'tenant_name' => 'Rama',
+                    'property' => 'Rumah Minimalis',
+                    'duration' => '12 bulan'
+                ]
+            ]
+        ]);
+    }
 }

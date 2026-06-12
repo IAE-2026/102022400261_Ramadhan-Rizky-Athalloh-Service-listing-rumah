@@ -11,6 +11,7 @@ class Listing extends Model
         'description',
         'location',
         'price',
-        'status'
+        'status',
+        'receipt_number'
     ];
 }
