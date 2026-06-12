@@ -161,17 +161,21 @@ Saya sedang mengerjakan Tugas 3 Integrasi Aplikasi Enterprise (IAE). Saya ingin 
 
 Respon AI:
 
-Menyiapkan database.
-Menambahkan kolom receipt_number.
-Membuat SoapAuditService.
-Membuat RabbitMQPublisher.
-Mengubah ListingController.
-Melakukan pengujian menggunakan Postman.
+Menyiapkan database: 
 
-prompt 2 : Bagaimana cara mengintegrasikan SoapAuditService ke ListingController?
+- Menambahkan kolom receipt_number.
+- Membuat SoapAuditService.
+- Membuat RabbitMQPublisher.
+- Mengubah ListingController.
+- Melakukan pengujian menggunakan Postman.
+
+### prompt 2 :
+Bagaimana cara mengintegrasikan SoapAuditService ke ListingController?
+
 Respon : 
+
 Method store() dimodifikasi agar:
--Menyimpan listing.
--Mengirim data ke SoapAuditService.
--Menerima Receipt Number.
--Menyimpan Receipt Number ke database.
+- Menyimpan listing.
+- Mengirim data ke SoapAuditService.
+- Menerima Receipt Number.
+- Menyimpan Receipt Number ke database.
