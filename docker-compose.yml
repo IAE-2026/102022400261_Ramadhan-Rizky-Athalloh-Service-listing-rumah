@@ -5,10 +5,10 @@ services:
   app:
     build: .
     container_name: eai-listing-service
+    env_file:
+      - .env
     ports:
       - "8000:8000"
-    volumes:
-      - .:/app
     depends_on:
       - mysql
 
@@ -20,4 +20,4 @@ services:
       MYSQL_DATABASE: eai_listing_service
       MYSQL_ROOT_PASSWORD: root
     ports:
-      - "3307:3306"
+      - "3307:3306"
