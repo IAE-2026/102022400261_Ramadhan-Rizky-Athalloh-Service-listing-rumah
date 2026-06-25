@@ -23,7 +23,8 @@ class ListingController extends Controller
 
     #[OA\Response(
         response: 200,
-        description: "Success"
+        description: "Success",
+        content: new OA\JsonContent()
     )]
 
     public function index()
@@ -57,7 +58,8 @@ class ListingController extends Controller
 
     #[OA\Response(
         response: 200,
-        description: "Success"
+        description: "Success",
+        content: new OA\JsonContent()
     )]
 
     public function show($id)
@@ -106,7 +108,8 @@ class ListingController extends Controller
 
     #[OA\Response(
         response: 201,
-        description: "Created"
+        description: "Created",
+        content: new OA\JsonContent()
     )]
 
     public function store(
@@ -174,7 +177,8 @@ class ListingController extends Controller
 
     #[OA\Response(
         response: 200,
-        description: "Success"
+        description: "Success",
+        content: new OA\JsonContent()
     )]
 
     public function availability($id)
@@ -197,7 +201,8 @@ class ListingController extends Controller
 
     #[OA\Response(
         response: 200,
-        description: "Success"
+        description: "Success",
+        content: new OA\JsonContent()
     )]
 
     public function contracts()
