@@ -27,7 +27,8 @@ class SSOService
         $response = Http::post(
             'https://iae-sso.virtualfri.id/api/v1/auth/token',
             [
-                'api_key' => env('IAE_API_KEY')
+                'api_key' => env('IAE_API_KEY'),
+                'nim' => env('NIM')
             ]
         );
 

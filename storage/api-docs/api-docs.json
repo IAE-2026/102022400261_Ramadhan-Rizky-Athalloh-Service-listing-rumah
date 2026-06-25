@@ -31,7 +31,37 @@
                 "summary": "Create new listing",
                 "operationId": "93b8a944b9924defa28b447e2e6878c3",
                 "requestBody": {
-                    "required": true
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "title",
+                                    "location",
+                                    "price"
+                                ],
+                                "properties": {
+                                    "title": {
+                                        "type": "string",
+                                        "example": "Rumah Minimalis"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "Deskripsi properti"
+                                    },
+                                    "location": {
+                                        "type": "string",
+                                        "example": "Bandung"
+                                    },
+                                    "price": {
+                                        "type": "integer",
+                                        "example": 1500000
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
                 },
                 "responses": {
                     "201": {

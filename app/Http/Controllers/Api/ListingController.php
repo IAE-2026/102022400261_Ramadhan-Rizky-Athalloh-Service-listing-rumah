@@ -28,18 +28,12 @@ class ListingController extends Controller
 
     public function index()
     {
+        $listings = Listing::all();
+
         return response()->json([
             'status' => 'success',
             'message' => 'Data retrieved successfully',
-            'data' => [
-                [
-                    'id' => 1,
-                    'title' => 'Rumah Minimalis',
-                    'location' => 'Bandung',
-                    'price' => 1500000,
-                    'status' => 'available'
-                ]
-            ],
+            'data' => $listings,
             'meta' => [
                 'service_name' => 'Listing-Service',
                 'api_version' => 'v1'
@@ -68,7 +62,9 @@ class ListingController extends Controller
 
     public function show($id)
     {
-        if ($id != 1) {
+        $listing = Listing::find($id);
+
+        if (!$listing) {
             return response()->json([
                 'status' => 'error',
                 'message' => 'Listing not found',
@@ -79,12 +75,10 @@ class ListingController extends Controller
         return response()->json([
             'status' => 'success',
             'message' => 'Detail listing',
-            'data' => [
-                'id' => $id,
-                'title' => 'Rumah Minimalis',
-                'location' => 'Bandung',
-                'price' => 1500000,
-                'status' => 'available'
+            'data' => $listing,
+            'meta' => [
+                'service_name' => 'Listing-Service',
+                'api_version' => 'v1'
             ]
         ]);
     }
@@ -98,7 +92,16 @@ class ListingController extends Controller
     )]
 
     #[OA\RequestBody(
-        required: true
+        required: true,
+        content: new OA\JsonContent(
+            required: ["title", "location", "price"],
+            properties: [
+                new OA\Property(property: "title", type: "string", example: "Rumah Minimalis"),
+                new OA\Property(property: "description", type: "string", example: "Deskripsi properti"),
+                new OA\Property(property: "location", type: "string", example: "Bandung"),
+                new OA\Property(property: "price", type: "integer", example: 1500000)
+            ]
+        )
     )]
 
     #[OA\Response(
@@ -145,11 +148,14 @@ class ListingController extends Controller
     ]);
 
     return response()->json([
-    'status' => 'success',
-    'message' => 'Property created successfully',
-    'receipt_number' => $listing->receipt_number,
-    'data' => $listing
-], 201);
+        'status' => 'success',
+        'message' => 'Property created successfully',
+        'data' => $listing,
+        'meta' => [
+            'service_name' => 'Listing-Service',
+            'api_version' => 'v1'
+        ]
+    ], 201);
 }
 
 

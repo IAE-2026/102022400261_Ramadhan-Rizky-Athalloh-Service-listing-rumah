@@ -106,9 +106,7 @@ return [
     // ]
     //
     'types' => [
-        // ExampleType::class,
-        // ExampleRelationType::class,
-        // \Rebing\GraphQL\Support\UploadType::class,
+        'Listing' => App\GraphQL\Types\ListingType::class,
     ],
 
     // This callable will be passed the Error object for each errors GraphQL catch.

@@ -13,7 +13,7 @@ class ApiKeyMiddleware
         $apiKey = $request->header('X-IAE-KEY');
 
         // Ganti dengan NIM kamu
-        $validApiKey = 'KEY-MHS-319';
+        $validApiKey = '102022400261';
 
         if ($apiKey !== $validApiKey) {
 

@@ -22,5 +22,19 @@ return Application::configure(basePath: dirname(__DIR__))
     })
 
     ->withExceptions(function (Exceptions $exceptions) {
+        $exceptions->render(function (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Validation Error',
+                'errors' => $e->errors()
+            ], 422);
+        });
 
+        $exceptions->render(function (\Symfony\Component\HttpKernel\Exception\NotFoundHttpException $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Resource not found',
+                'errors' => null
+            ], 404);
+        });
     })->create();
