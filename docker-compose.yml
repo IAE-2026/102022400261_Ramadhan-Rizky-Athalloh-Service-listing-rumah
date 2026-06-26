@@ -11,6 +11,8 @@ services:
       - "8000:8000"
     depends_on:
       - mysql
+    networks:
+      - eai-internal
 
   mysql:
     image: mysql:8
@@ -19,5 +21,10 @@ services:
     environment:
       MYSQL_DATABASE: eai_listing_service
       MYSQL_ROOT_PASSWORD: root
-    ports:
-      - "3307:3306"
+    networks:
+      - eai-internal
+
+networks:
+  eai-internal:
+    driver: bridge
+    internal: false
