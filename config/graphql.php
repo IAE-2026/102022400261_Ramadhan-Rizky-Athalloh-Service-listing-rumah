@@ -13,7 +13,7 @@ return [
 
         // Any middleware for the graphql route group
         // This middleware will apply to all schemas
-        'middleware' => [],
+        'middleware' => [\App\Http\Middleware\GraphQLWrapperMiddleware::class],
 
         // Additional route group attributes
         //
@@ -120,12 +120,20 @@ return [
 
     /*
      * Custom Error Handling
-     *
-     * Expected handler signature is: function (array $errors, callable $formatter): array
-     *
-     * The default handler will pass exceptions to laravel Error Handling mechanism
      */
-    'errors_handler' => [Rebing\GraphQL\GraphQL::class, 'handleErrors'],
+    'errors_handler' => function (array $errors, callable $formatter) {
+        $formattedErrors = array_map($formatter, $errors);
+        
+        // Assuming the first error's message is the primary message
+        $message = count($formattedErrors) > 0 ? $formattedErrors[0]['message'] : 'GraphQL Error';
+        
+        return [
+            'status' => 'error',
+            'message' => $message,
+            'data' => null,
+            'errors' => $formattedErrors
+        ];
+    },
 
     /*
      * Options to limit the query complexity and depth. See the doc

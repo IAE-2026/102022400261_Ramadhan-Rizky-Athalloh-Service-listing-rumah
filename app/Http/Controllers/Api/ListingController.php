@@ -113,53 +113,60 @@ class ListingController extends Controller
     )]
 
     public function store(
-    Request $request,
-    SoapAuditService $soapService,
-    RabbitMQPublisher $rabbitService
-)
-{
-    $validated = $request->validate([
-        'title' => 'required|string|max:255',
-        'description' => 'nullable|string',
-        'location' => 'required|string|max:255',
-        'price' => 'required|numeric'
-    ]);
+        Request $request,
+        SoapAuditService $soapService,
+        RabbitMQPublisher $rabbitService
+    ) {
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'location' => 'required|string|max:255',
+            'price' => 'required|numeric'
+        ]);
 
-    $listing = Listing::create([
-        'title' => $validated['title'],
-        'description' => $validated['description'] ?? null,
-        'location' => $validated['location'],
-        'price' => $validated['price'],
-        'status' => 'available'
-    ]);
+        $listing = Listing::create([
+            'title' => $validated['title'],
+            'description' => $validated['description'] ?? null,
+            'location' => $validated['location'],
+            'price' => $validated['price'],
+            'status' => 'available'
+        ]);
 
-    $audit = $soapService->sendAudit([
-        'listing_id' => $listing->id,
-        'title' => $listing->title,
-        'price' => $listing->price
-    ]);
+        // Try SOAP audit - non-blocking
+        try {
+            $audit = $soapService->sendAudit([
+                'listing_id' => $listing->id,
+                'title' => $listing->title,
+                'price' => $listing->price
+            ]);
+            $listing->receipt_number = $audit['receipt_number'] ?? null;
+            $listing->save();
+        } catch (\Throwable $e) {
+            // Audit service unavailable, continue without receipt
+        }
 
-    $listing->receipt_number = 
-        $audit['receipt_number'];
-    $listing->save();
+        // Try RabbitMQ publish - non-blocking
+        try {
+            $rabbitService->publish([
+                'event' => 'listing.created',
+                'listing_id' => $listing->id,
+                'title' => $listing->title,
+                'price' => $listing->price
+            ]);
+        } catch (\Throwable $e) {
+            // Message broker unavailable, continue
+        }
 
-    $rabbitService->publish([
-        'event' => 'listing.created',
-        'listing_id' => $listing->id,
-        'title' => $listing->title,
-        'price' => $listing->price
-    ]);
-
-    return response()->json([
-        'status' => 'success',
-        'message' => 'Property created successfully',
-        'data' => $listing,
-        'meta' => [
-            'service_name' => 'Listing-Service',
-            'api_version' => 'v1'
-        ]
-    ], 201);
-}
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Property created successfully',
+            'data' => $listing,
+            'meta' => [
+                'service_name' => 'Listing-Service',
+                'api_version' => 'v1'
+            ]
+        ], 201);
+    }
 
 
     #[OA\Get(
